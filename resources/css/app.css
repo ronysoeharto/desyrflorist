@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@theme {
+    --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Palette: Soft Dusty Pink, Rose, Warm Ivory, Dark Charcoal, Muted Sage, Soft Gold */
+    --color-ivory: #FAF8F5;
+    --color-ivory-light: #FDFBF9;
+    --color-ivory-dark: #F3ECE4;
+
+    --color-charcoal: #2A2626;
+    --color-charcoal-muted: #6B6565;
+    --color-charcoal-light: #9B9494;
+
+    --color-dusty: #E5B2B6;
+    --color-dusty-light: #F8E8EA;
+    --color-dusty-dark: #C9888E;
+
+    --color-rose: #B85D66;
+    --color-rose-dark: #8F3B44;
+    --color-rose-deep: #66272E;
+
+    --color-sage: #7B8B75;
+    --color-sage-light: #EEF2EB;
+    --color-sage-dark: #5C6A57;
+
+    --color-gold: #C5A059;
+    --color-gold-light: #F7F1E5;
+    --color-gold-dark: #A37E36;
+}
+
+/* Custom Base Styles */
+body {
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-editorial {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+}
+
+/* Subtle transitions for buttons and links */
+a, button {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #F3ECE4;
+}
+::-webkit-scrollbar-thumb {
+    background: #D8BABF;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #C4989F;
+}

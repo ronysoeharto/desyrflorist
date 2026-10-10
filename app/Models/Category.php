@@ -39,9 +39,13 @@ class Category extends Model
     public function getImageUrlAttribute(): ?string
     {
         if (! $this->image) {
-            return null;
+            return 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=600&q=80';
         }
 
-        return asset('storage/'.$this->image);
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        return asset('storage/'.ltrim($this->image, '/'));
     }
 }

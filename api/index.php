@@ -12,6 +12,7 @@ $dirs = [
     '/tmp/storage/app/public/payments',
     '/tmp/storage/app/public/delivery-proofs',
     '/tmp/storage/app/public/settings',
+    '/tmp/storage/app/public/categories',
 ];
 
 foreach ($dirs as $dir) {

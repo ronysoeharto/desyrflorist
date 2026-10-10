@@ -5,21 +5,7 @@
 @section('content')
 <!-- 1. Hero Section (Dynamic Banner Showcase) -->
 @php
-    $heroBanners = (isset($banners) && $banners->isNotEmpty()) ? $banners : collect([
-        (object)[
-            'id' => 1,
-            'title' => 'Sentuhan Bunga Segar, <br><span class="italic font-light text-[#B85D66]">Dirangkai Tulus</span> untuk Momen Berharga Anda.',
-            'subtitle' => 'Artisan Florist & Same-Day Delivery ' . ($storeSettings['store_city'] ?? 'Jakarta'),
-            'description' => 'Dari buket tangan romantis bernuansa pastel hingga bunga meja berkelas. Setiap tangkai dipilih langsung dari kebun terbaik dan dirangkai penuh keahlian oleh floris kami.',
-            'image_url' => 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=80',
-            'link_url' => route('shop.index'),
-            'button_text' => 'Jelajahi Katalog Bunga',
-            'secondary_button_text' => '✨ Rangkai Buket Sendiri',
-            'secondary_button_url' => route('custom-bouquet.index'),
-            'badge_text' => '"Bunganya sangat segar dan wangi, kemasannya rapi sekali!"',
-            'badge_author' => '— Alika, Jakarta Selatan',
-        ]
-    ]);
+    $hasBanners = isset($banners) && $banners->isNotEmpty();
 @endphp
 
 <section class="relative bg-[#FAF8F5] overflow-hidden border-b border-[#EADFD4]" id="heroBannerCarousel">
@@ -34,143 +20,216 @@
     @endif
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 lg:py-20">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            
-            <!-- Left Editorial Text (Slide synced) -->
-            <div class="lg:col-span-7 relative">
-                @foreach($heroBanners as $idx => $banner)
-                    <div class="hero-text-slide space-y-6 transition-all duration-700 ease-out {{ $idx === 0 ? 'block opacity-100 translate-y-0' : 'hidden opacity-0 translate-y-2' }}"
-                         data-slide-index="{{ $idx }}">
-                        
-                        <!-- Subtitle / Badge -->
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8E8EA] border border-[#E5B2B6] text-xs font-semibold text-[#B85D66]">
-                            <span class="w-2 h-2 rounded-full bg-[#B85D66]"></span>
-                            <span>{{ $banner->subtitle ?: ('Artisan Florist & Same-Day Delivery ' . ($storeSettings['store_city'] ?? 'Jakarta')) }}</span>
-                        </div>
+        @if($hasBanners)
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                <!-- Left Editorial Text (Slide synced) -->
+                <div class="lg:col-span-7 relative">
+                    @foreach($banners as $idx => $banner)
+                        <div class="hero-text-slide space-y-6 transition-all duration-700 ease-out {{ $idx === 0 ? 'block opacity-100 translate-y-0' : 'hidden opacity-0 translate-y-2' }}"
+                             data-slide-index="{{ $idx }}">
+                            
+                            @if(!empty($banner->subtitle))
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8E8EA] border border-[#E5B2B6] text-xs font-semibold text-[#B85D66]">
+                                    <span class="w-2 h-2 rounded-full bg-[#B85D66]"></span>
+                                    <span>{{ $banner->subtitle }}</span>
+                                </div>
+                            @endif
 
-                        <!-- Title -->
-                        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#2A2626] leading-[1.15] font-normal">
-                            @if($banner->title)
-                                {!! nl2br(e($banner->title)) !!}
+                            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#2A2626] leading-[1.15] font-normal">
+                                {!! nl2br(e($banner->title ?: ($storeSettings['store_name'] ?? 'Desy Florist'))) !!}
+                            </h1>
+
+                            @if(!empty($banner->description))
+                                <p class="text-sm sm:text-base text-[#6B6565] leading-relaxed max-w-xl font-light">
+                                    {{ $banner->description }}
+                                </p>
+                            @endif
+
+                            <!-- Action Buttons -->
+                            @if((!empty($banner->button_text) && !empty($banner->link_url)) || (!empty($banner->secondary_button_text) && !empty($banner->secondary_button_url)))
+                                <div class="pt-2 flex flex-wrap items-center gap-4">
+                                    @if(!empty($banner->button_text) && !empty($banner->link_url))
+                                        <a href="{{ $banner->link_url }}"
+                                           class="px-7 py-3.5 rounded-xl bg-[#B85D66] hover:bg-[#8F3B44] text-white text-xs font-semibold tracking-wider uppercase transition shadow-sm">
+                                            {{ $banner->button_text }}
+                                        </a>
+                                    @endif
+
+                                    @if(!empty($banner->secondary_button_text) && !empty($banner->secondary_button_url))
+                                        <a href="{{ $banner->secondary_button_url }}"
+                                           class="px-7 py-3.5 rounded-xl border border-[#D8BABF] hover:border-[#B85D66] hover:bg-[#F8E8EA] text-xs font-semibold tracking-wider uppercase text-[#2A2626] transition">
+                                            {{ $banner->secondary_button_text }}
+                                        </a>
+                                    @endif
+                                </div>
                             @else
-                                Sentuhan Bunga Segar, <br>
-                                <span class="italic font-light text-[#B85D66]">Dirangkai Tulus</span> untuk Momen Berharga Anda.
-                            @endif
-                        </h1>
-
-                        <!-- Description -->
-                        <p class="text-sm sm:text-base text-[#6B6565] leading-relaxed max-w-xl font-light">
-                            {{ $banner->description ?: 'Dari buket tangan romantis bernuansa pastel hingga bunga meja berkelas. Setiap tangkai dipilih langsung dari kebun terbaik dan dirangkai penuh keahlian oleh floris kami.' }}
-                        </p>
-
-                        <!-- Action Buttons -->
-                        <div class="pt-2 flex flex-wrap items-center gap-4">
-                            @if($banner->button_text || $banner->link_url)
-                                <a href="{{ $banner->link_url ?: route('shop.index') }}"
-                                   class="px-7 py-3.5 rounded-xl bg-[#B85D66] hover:bg-[#8F3B44] text-white text-xs font-semibold tracking-wider uppercase transition shadow-sm">
-                                    {{ $banner->button_text ?: 'Jelajahi Katalog Bunga' }}
-                                </a>
-                            @endif
-
-                            @if($banner->secondary_button_text || $banner->secondary_button_url)
-                                <a href="{{ $banner->secondary_button_url ?: route('custom-bouquet.index') }}"
-                                   class="px-7 py-3.5 rounded-xl border border-[#D8BABF] hover:border-[#B85D66] hover:bg-[#F8E8EA] text-xs font-semibold tracking-wider uppercase text-[#2A2626] transition">
-                                    {{ $banner->secondary_button_text ?: '✨ Rangkai Buket Sendiri' }}
-                                </a>
+                                <div class="pt-2 flex flex-wrap items-center gap-4">
+                                    <a href="{{ route('shop.index') }}"
+                                       class="px-7 py-3.5 rounded-xl bg-[#B85D66] hover:bg-[#8F3B44] text-white text-xs font-semibold tracking-wider uppercase transition shadow-sm">
+                                        Jelajahi Katalog
+                                    </a>
+                                </div>
                             @endif
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
 
-                <!-- Micro Trust Bar -->
-                <div class="mt-8 pt-6 grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-[#EADFD4] text-xs text-[#6B6565]">
-                    <div class="flex items-center gap-2">
-                        <span class="text-[#7B8B75] font-bold">✓</span>
-                        <span>Bunga Segar Tiap Pagi</span>
+                    <!-- Micro Trust Bar -->
+                    <div class="mt-8 pt-6 grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-[#EADFD4] text-xs text-[#6B6565]">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Bunga Segar Tiap Pagi</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Foto Sebelum Dikirim</span>
+                        </div>
+                        <div class="flex items-center gap-2 col-span-2 sm:col-span-1">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Gratis Kartu Ucapan</span>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[#7B8B75] font-bold">✓</span>
-                        <span>Foto Sebelum Dikirim</span>
-                    </div>
-                    <div class="flex items-center gap-2 col-span-2 sm:col-span-1">
-                        <span class="text-[#7B8B75] font-bold">✓</span>
-                        <span>Gratis Kartu Ucapan</span>
+                </div>
+
+                <!-- Right Hero Image Showcase (Carousel Slider) -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <!-- Main Image Frame -->
+                        <div class="rounded-2xl overflow-hidden shadow-lg border border-[#EADFD4] bg-[#F3ECE4] relative group">
+                            @foreach($banners as $idx => $banner)
+                                <div class="hero-image-slide transition-opacity duration-700 ease-in-out {{ $idx === 0 ? 'relative opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none' }}"
+                                     data-slide-index="{{ $idx }}">
+                                    @if(!empty($banner->image_url))
+                                        @if($banner->link_url)
+                                            <a href="{{ $banner->link_url }}" class="block w-full h-full relative group/link" title="{{ $banner->title ?? 'Lihat Detail' }}">
+                                                <img src="{{ $banner->image_url }}"
+                                                     alt="{{ $banner->title ?? 'Banner Desy Florist' }}"
+                                                     class="w-full h-full object-cover transition duration-700 group-hover/link:scale-105">
+                                                <div class="absolute inset-0 bg-black/0 group-hover/link:bg-black/10 transition-colors duration-300"></div>
+                                            </a>
+                                        @else
+                                            <img src="{{ $banner->image_url }}"
+                                                 alt="{{ $banner->title ?? 'Banner Desy Florist' }}"
+                                                 class="w-full h-full object-cover">
+                                        @endif
+                                    @else
+                                        <div class="w-full aspect-[4/3] flex items-center justify-center bg-[#FAF8F5] text-[#9B9494]">
+                                            <span class="text-xs">Foto Banner Desy Florist</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+
+                            <!-- Next / Previous Controls (Shown if more than 1 banner) -->
+                            @if($banners->count() > 1)
+                                <div class="absolute inset-y-0 left-3 flex items-center z-20">
+                                    <button id="heroPrevBtn" aria-label="Banner Sebelumnya"
+                                            class="w-9 h-9 rounded-full bg-white/80 hover:bg-white text-[#2A2626] hover:text-[#B85D66] border border-[#EADFD4] shadow-sm backdrop-blur-sm flex items-center justify-center text-sm transition transform hover:scale-105">
+                                        ‹
+                                    </button>
+                                </div>
+                                <div class="absolute inset-y-0 right-3 flex items-center z-20">
+                                    <button id="heroNextBtn" aria-label="Banner Berikutnya"
+                                            class="w-9 h-9 rounded-full bg-white/80 hover:bg-white text-[#2A2626] hover:text-[#B85D66] border border-[#EADFD4] shadow-sm backdrop-blur-sm flex items-center justify-center text-sm transition transform hover:scale-105">
+                                        ›
+                                    </button>
+                                </div>
+
+                                <!-- Carousel Dots Indicator -->
+                                <div class="absolute bottom-3 inset-x-0 flex items-center justify-center gap-1.5 z-20">
+                                    @foreach($banners as $idx => $banner)
+                                        <button class="hero-dot w-2 h-2 rounded-full transition-all duration-300 {{ $idx === 0 ? 'bg-[#B85D66] w-6' : 'bg-white/70 hover:bg-white' }}"
+                                                data-slide-index="{{ $idx }}"
+                                                aria-label="Pindah ke banner {{ $idx + 1 }}">
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Floating Quality Badge (Shown only if current slide has badge_text) -->
+                        <div id="heroFloatingBadge" class="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-sm p-4 rounded-xl border border-[#EADFD4] shadow-md max-w-[240px] {{ !empty($banners->first()->badge_text) ? 'hidden sm:block' : 'hidden' }} z-20 transition-all duration-500">
+                            <div class="flex items-center gap-2 text-[#C5A059] text-xs mb-1">
+                                ★★★★★
+                            </div>
+                            <p id="heroBadgeText" class="text-[11px] font-medium text-[#2A2626]">
+                                {{ $banners->first()->badge_text ?? '' }}
+                            </p>
+                            <span id="heroBadgeAuthor" class="text-[10px] text-[#9B9494] block mt-1 {{ !empty($banners->first()->badge_author) ? '' : 'hidden' }}">
+                                {{ $banners->first()->badge_author ?? '' }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
+        @else
+            <!-- Default Hero Section (When no custom banners are configured) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8E8EA] border border-[#E5B2B6] text-xs font-semibold text-[#B85D66]">
+                        <span class="w-2 h-2 rounded-full bg-[#B85D66]"></span>
+                        <span>{{ $storeSettings['store_tagline'] ?? ('Artisan Florist ' . ($storeSettings['store_city'] ?? 'Jakarta')) }}</span>
+                    </div>
 
-            <!-- Right Hero Image Showcase (Carousel Slider) -->
-            <div class="lg:col-span-5 relative">
-                <div class="relative mx-auto max-w-md lg:max-w-none">
-                    
-                    <!-- Main Image Frame -->
-                    <div class="rounded-2xl overflow-hidden shadow-lg border border-[#EADFD4] bg-[#F3ECE4] relative group">
-                        @foreach($heroBanners as $idx => $banner)
-                            <div class="hero-image-slide transition-opacity duration-700 ease-in-out {{ $idx === 0 ? 'relative opacity-100 z-10' : 'absolute inset-0 opacity-0 z-0 pointer-events-none' }}"
-                                 data-slide-index="{{ $idx }}">
-                                @if($banner->link_url)
-                                    <a href="{{ $banner->link_url }}" class="block w-full h-full relative group/link" title="{{ $banner->title ?? 'Lihat Detail' }}">
-                                        <img src="{{ $banner->image_url }}"
-                                             alt="{{ $banner->title ?? 'Desy Florist Arrangement' }}"
-                                             class="w-full h-full object-cover transition duration-700 group-hover/link:scale-105">
-                                        <div class="absolute inset-0 bg-black/0 group-hover/link:bg-black/10 transition-colors duration-300"></div>
-                                    </a>
-                                @else
-                                    <img src="{{ $banner->image_url }}"
-                                         alt="{{ $banner->title ?? 'Desy Florist Arrangement' }}"
-                                         class="w-full h-full object-cover">
-                                @endif
-                            </div>
-                        @endforeach
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#2A2626] leading-[1.15] font-normal">
+                        {{ $storeSettings['store_name'] ?? 'Desy Florist' }}
+                    </h1>
 
-                        <!-- Next / Previous Controls (Shown if more than 1 banner) -->
-                        @if($heroBanners->count() > 1)
-                            <div class="absolute inset-y-0 left-3 flex items-center z-20">
-                                <button id="heroPrevBtn" aria-label="Banner Sebelumnya"
-                                        class="w-9 h-9 rounded-full bg-white/80 hover:bg-white text-[#2A2626] hover:text-[#B85D66] border border-[#EADFD4] shadow-sm backdrop-blur-sm flex items-center justify-center text-sm transition transform hover:scale-105">
-                                    ‹
-                                </button>
-                            </div>
-                            <div class="absolute inset-y-0 right-3 flex items-center z-20">
-                                <button id="heroNextBtn" aria-label="Banner Berikutnya"
-                                        class="w-9 h-9 rounded-full bg-white/80 hover:bg-white text-[#2A2626] hover:text-[#B85D66] border border-[#EADFD4] shadow-sm backdrop-blur-sm flex items-center justify-center text-sm transition transform hover:scale-105">
-                                    ›
-                                </button>
-                            </div>
+                    <p class="text-sm sm:text-base text-[#6B6565] leading-relaxed max-w-xl font-light">
+                        {{ $storeSettings['store_about_short'] ?? 'Rangkaian bunga segar pilihan dengan kurasi terbaik untuk setiap momen berharga Anda.' }}
+                    </p>
 
-                            <!-- Carousel Dots Indicator -->
-                            <div class="absolute bottom-3 inset-x-0 flex items-center justify-center gap-1.5 z-20">
-                                @foreach($heroBanners as $idx => $banner)
-                                    <button class="hero-dot w-2 h-2 rounded-full transition-all duration-300 {{ $idx === 0 ? 'bg-[#B85D66] w-6' : 'bg-white/70 hover:bg-white' }}"
-                                            data-slide-index="{{ $idx }}"
-                                            aria-label="Pindah ke banner {{ $idx + 1 }}">
-                                    </button>
-                                @endforeach
+                    <div class="pt-2 flex flex-wrap items-center gap-4">
+                        <a href="{{ route('shop.index') }}"
+                           class="px-7 py-3.5 rounded-xl bg-[#B85D66] hover:bg-[#8F3B44] text-white text-xs font-semibold tracking-wider uppercase transition shadow-sm">
+                            Jelajahi Katalog Bunga
+                        </a>
+                        <a href="{{ route('custom-bouquet.index') }}"
+                           class="px-7 py-3.5 rounded-xl border border-[#D8BABF] hover:border-[#B85D66] hover:bg-[#F8E8EA] text-xs font-semibold tracking-wider uppercase text-[#2A2626] transition">
+                            ✨ Rangkai Buket Sendiri
+                        </a>
+                    </div>
+
+                    <!-- Micro Trust Bar -->
+                    <div class="mt-8 pt-6 grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-[#EADFD4] text-xs text-[#6B6565]">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Bunga Segar Tiap Pagi</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Foto Sebelum Dikirim</span>
+                        </div>
+                        <div class="flex items-center gap-2 col-span-2 sm:col-span-1">
+                            <span class="text-[#7B8B75] font-bold">✓</span>
+                            <span>Gratis Kartu Ucapan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 relative">
+                    <div class="rounded-2xl border border-[#EADFD4] bg-white p-8 sm:p-10 text-center space-y-4 shadow-xs">
+                        <div class="w-16 h-16 rounded-full bg-[#FAF8F5] border border-[#EADFD4] mx-auto flex items-center justify-center text-3xl">
+                            🌸
+                        </div>
+                        <h3 class="font-serif text-2xl text-[#2A2626]">{{ $storeSettings['store_name'] ?? 'Desy Florist' }}</h3>
+                        <p class="text-xs text-[#6B6565] leading-relaxed">
+                            Koleksi buket tangan, bunga meja, dan standing flower segar dirangkai oleh floris berpengalaman.
+                        </p>
+                        @if(auth()->check() && auth()->user()->role === 'admin')
+                            <div class="pt-2">
+                                <a href="{{ route('admin.banners.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#B85D66] text-white text-xs font-semibold hover:bg-[#8F3B44] transition shadow-xs">
+                                    + Unggah Foto Banner Toko
+                                </a>
                             </div>
                         @endif
                     </div>
-
-                    <!-- Floating Quality Badge (Synced with Active Slide) -->
-                    <div id="heroFloatingBadge" class="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-sm p-4 rounded-xl border border-[#EADFD4] shadow-md max-w-[240px] hidden sm:block z-20 transition-all duration-500">
-                        <div class="flex items-center gap-2 text-[#C5A059] text-xs mb-1">
-                            ★★★★★
-                        </div>
-                        <p id="heroBadgeText" class="text-[11px] font-medium text-[#2A2626]">
-                            {{ $heroBanners->first()->badge_text ?: '"Bunganya sangat segar dan wangi, kemasannya rapi sekali!"' }}
-                        </p>
-                        <span id="heroBadgeAuthor" class="text-[10px] text-[#9B9494] block mt-1">
-                            {{ $heroBanners->first()->badge_author ?: '— Alika, Jakarta Selatan' }}
-                        </span>
-                    </div>
-
                 </div>
             </div>
-
-        </div>
+        @endif
     </div>
 </section>
 
-@if($heroBanners->count() > 1)
+@if($hasBanners && $banners->count() > 1)
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const section = document.getElementById('heroBannerCarousel');
@@ -181,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dots = section.querySelectorAll('.hero-dot');
     const prevBtn = document.getElementById('heroPrevBtn');
     const nextBtn = document.getElementById('heroNextBtn');
+    const floatingBadge = document.getElementById('heroFloatingBadge');
     const badgeText = document.getElementById('heroBadgeText');
     const badgeAuthor = document.getElementById('heroBadgeAuthor');
 
@@ -190,10 +250,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Badges array from rendered slides
     const badgesData = [
-        @foreach($heroBanners as $b)
+        @foreach($banners as $b)
             {
-                text: {!! json_encode($b->badge_text ?: '"Bunganya sangat segar dan wangi, kemasannya rapi sekali!"') !!},
-                author: {!! json_encode($b->badge_author ?: '— Alika, Jakarta Selatan') !!}
+                text: {!! json_encode($b->badge_text ?? '') !!},
+                author: {!! json_encode($b->badge_author ?? '') !!}
             },
         @endforeach
     ];
@@ -235,9 +295,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Floating Badge
-        if (badgeText && badgesData[currentSlide]) {
-            badgeText.textContent = badgesData[currentSlide].text;
-            badgeAuthor.textContent = badgesData[currentSlide].author;
+        if (floatingBadge) {
+            const data = badgesData[currentSlide];
+            if (data && data.text) {
+                if (badgeText) badgeText.textContent = data.text;
+                if (badgeAuthor) {
+                    if (data.author) {
+                        badgeAuthor.textContent = data.author;
+                        badgeAuthor.classList.remove('hidden');
+                    } else {
+                        badgeAuthor.classList.add('hidden');
+                    }
+                }
+                floatingBadge.classList.remove('hidden');
+                floatingBadge.classList.add('sm:block');
+            } else {
+                floatingBadge.classList.add('hidden');
+                floatingBadge.classList.remove('sm:block');
+            }
         }
     }
 

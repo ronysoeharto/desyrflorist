@@ -209,10 +209,9 @@
                 <div>
                     <label class="block font-medium mb-1 text-[#2A2626]">
                         Judul Utama Banner
-                        <span class="text-[10px] text-[#9B9494] font-normal">(Biarkan kosong untuk menggunakan teks default Desy Florist)</span>
                     </label>
                     <input type="text" name="title" value="{{ old('title') }}"
-                           placeholder="Contoh: Sentuhan Bunga Segar, Dirangkai Tulus"
+                           placeholder="Contoh: Buket Bunga Segar & Momen Istimewa"
                            class="w-full p-2.5 rounded-xl border border-[#D8BABF] focus:ring-1 focus:ring-[#B85D66]">
                 </div>
 
@@ -220,18 +219,18 @@
                 <div>
                     <label class="block font-medium mb-1 text-[#2A2626]">
                         Label Badge / Subjudul
-                        <span class="text-[10px] text-[#9B9494] font-normal">(Muncul sebagai pill di atas judul)</span>
+                        <span class="text-[10px] text-[#9B9494] font-normal">(Opsional, muncul sebagai label kecil di atas judul)</span>
                     </label>
                     <input type="text" name="subtitle" value="{{ old('subtitle') }}"
-                           placeholder="Contoh: Artisan Florist & Same-Day Delivery Jakarta"
+                           placeholder="Contoh: Koleksi Spesial Desy Florist"
                            class="w-full p-2.5 rounded-xl border border-[#D8BABF] focus:ring-1 focus:ring-[#B85D66]">
                 </div>
 
                 <!-- Deskripsi Singkat -->
                 <div>
-                    <label class="block font-medium mb-1 text-[#2A2626]">Deskripsi Singkat</label>
+                    <label class="block font-medium mb-1 text-[#2A2626]">Deskripsi Singkat <span class="text-[10px] text-[#9B9494] font-normal">(Opsional)</span></label>
                     <textarea name="description" rows="2"
-                              placeholder="Dari buket tangan romantis bernuansa pastel hingga bunga meja berkelas..."
+                              placeholder="Tuliskan deskripsi atau pesan promosi singkat..."
                               class="w-full p-2.5 rounded-xl border border-[#D8BABF] focus:ring-1 focus:ring-[#B85D66]">{{ old('description') }}</textarea>
                 </div>
 
@@ -254,15 +253,15 @@
                 <!-- Tombol Kedua -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-medium mb-1 text-[#2A2626]">Teks Tombol Kedua</label>
-                        <input type="text" name="secondary_button_text" value="{{ old('secondary_button_text', '✨ Rangkai Buket Sendiri') }}"
-                               placeholder="✨ Rangkai Buket Sendiri"
+                        <label class="block font-medium mb-1 text-[#2A2626]">Teks Tombol Kedua <span class="text-[10px] text-[#9B9494] font-normal">(Opsional)</span></label>
+                        <input type="text" name="secondary_button_text" value="{{ old('secondary_button_text') }}"
+                               placeholder="Contoh: ✨ Rangkai Buket Sendiri"
                                class="w-full p-2.5 rounded-xl border border-[#D8BABF] focus:ring-1 focus:ring-[#B85D66]">
                     </div>
                     <div>
-                        <label class="block font-medium mb-1 text-[#2A2626]">Link Tombol Kedua</label>
-                        <input type="text" name="secondary_button_url" value="{{ old('secondary_button_url', '/custom-bouquet') }}"
-                               placeholder="/custom-bouquet"
+                        <label class="block font-medium mb-1 text-[#2A2626]">Link Tombol Kedua <span class="text-[10px] text-[#9B9494] font-normal">(Opsional)</span></label>
+                        <input type="text" name="secondary_button_url" value="{{ old('secondary_button_url') }}"
+                               placeholder="Contoh: /custom-bouquet"
                                class="w-full p-2.5 rounded-xl border border-[#D8BABF] focus:ring-1 focus:ring-[#B85D66]">
                     </div>
                 </div>
@@ -270,18 +269,18 @@
                 <!-- Badge Mengambang (Floating Testimonial / Quality Tag) -->
                 <div class="p-3 bg-[#FAF8F5] rounded-xl border border-[#EADFD4] space-y-2">
                     <span class="block text-[11px] font-semibold text-[#6B6565]">
-                        Badge Mengambang di Atas Foto (Opsional)
+                        Badge Mengambang di Atas Foto (Opsional, kosongkan jika tidak ingin ditampilkan)
                     </span>
                     <div>
-                        <label class="block text-[10px] text-[#9B9494] mb-0.5">Teks Kutipan / Ulasan</label>
+                        <label class="block text-[10px] text-[#9B9494] mb-0.5">Teks Kutipan / Badge</label>
                         <input type="text" name="badge_text" value="{{ old('badge_text') }}"
-                               placeholder='"Bunganya sangat segar dan wangi, kemasannya rapi sekali!"'
+                               placeholder='Contoh: "Bunga segar dirangkai dengan sepenuh hati"'
                                class="w-full p-2 rounded-lg border border-[#D8BABF] bg-white text-xs">
                     </div>
                     <div>
-                        <label class="block text-[10px] text-[#9B9494] mb-0.5">Keterangan / Nama Pengutip</label>
+                        <label class="block text-[10px] text-[#9B9494] mb-0.5">Keterangan / Pengutip (Opsional)</label>
                         <input type="text" name="badge_author" value="{{ old('badge_author') }}"
-                               placeholder="— Alika, Jakarta Selatan"
+                               placeholder="Contoh: Desy Florist Signature"
                                class="w-full p-2 rounded-lg border border-[#D8BABF] bg-white text-xs">
                     </div>
                 </div>

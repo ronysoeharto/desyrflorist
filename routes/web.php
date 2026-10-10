@@ -196,3 +196,38 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/settings/slots', [AdminSettingController::class, 'slots'])->name('settings.slots');
     Route::post('/settings/slots', [AdminSettingController::class, 'updateSlots'])->name('settings.slots.update');
 });
+
+// Fallback asset routes for serverless hosting (e.g. Vercel)
+Route::get('/build/{path}', function (string $path) {
+    $filePath = public_path('build/'.$path);
+    if (! file_exists($filePath)) {
+        abort(404);
+    }
+    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    $mimeType = match ($extension) {
+        'css' => 'text/css; charset=utf-8',
+        'js' => 'application/javascript; charset=utf-8',
+        'woff2' => 'font/woff2',
+        'woff' => 'font/woff',
+        'json' => 'application/json',
+        'svg' => 'image/svg+xml',
+        'png' => 'image/png',
+        'jpg', 'jpeg' => 'image/jpeg',
+        'webp' => 'image/webp',
+        default => mime_content_type($filePath) ?: 'application/octet-stream',
+    };
+
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=31536000, immutable',
+    ]);
+})->where('path', '.*');
+
+Route::get('/storage/{path}', function (string $path) {
+    $filePath = storage_path('app/public/'.$path);
+    if (! file_exists($filePath)) {
+        abort(404);
+    }
+
+    return response()->file($filePath);
+})->where('path', '.*');

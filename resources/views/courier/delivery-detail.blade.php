@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- Step 3 -->
-                <div class="p-2.5 rounded-xl border {{ $delivery->status === 'on_delivery' ? 'bg-purple-50 border-purple-300 text-purple-900 font-bold ring-2 ring-purple-400' : 'bg-gray-50 border-gray-200 text-gray-400') }}">
+                <div class="p-2.5 rounded-xl border {{ $delivery->status === 'on_delivery' ? 'bg-purple-50 border-purple-300 text-purple-900 font-bold ring-2 ring-purple-400' : 'bg-gray-50 border-gray-200 text-gray-400' }}">
                     <div class="text-sm mb-0.5">{{ $delivery->status === 'on_delivery' ? '📷' : '🔒' }}</div>
                     <span class="block text-[11px] font-bold">3. Foto Bukti</span>
                     <span class="text-[9px] text-[#6B6565]">{{ $delivery->status === 'on_delivery' ? 'Saat Sampai' : 'Terkunci' }}</span>

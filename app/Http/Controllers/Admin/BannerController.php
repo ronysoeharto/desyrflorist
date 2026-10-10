@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -42,7 +43,7 @@ class BannerController extends Controller
 
         if ($request->hasFile('image_file')) {
             try {
-                $imagePath = $request->file('image_file')->store('banners', 'public');
+                $imagePath = ImageUploadService::storeImage($request->file('image_file'), 'banners');
             } catch (\Throwable $e) {
                 \Log::error('Upload banner failed: '.$e->getMessage());
 
@@ -113,7 +114,7 @@ class BannerController extends Controller
                 }
             }
             try {
-                $imagePath = $request->file('image_file')->store('banners', 'public');
+                $imagePath = ImageUploadService::storeImage($request->file('image_file'), 'banners');
             } catch (\Throwable $e) {
                 \Log::error('Update banner image failed: '.$e->getMessage());
 

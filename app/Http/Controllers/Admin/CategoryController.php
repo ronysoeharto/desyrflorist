@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -33,7 +34,7 @@ class CategoryController extends Controller
 
         if ($request->hasFile('image_file')) {
             try {
-                $imagePath = $request->file('image_file')->store('categories', 'public');
+                $imagePath = ImageUploadService::storeImage($request->file('image_file'), 'categories');
             } catch (\Throwable $e) {
                 \Log::error('Upload category image failed: '.$e->getMessage());
 
@@ -114,7 +115,7 @@ class CategoryController extends Controller
             }
 
             try {
-                $imagePath = $request->file('image_file')->store('categories', 'public');
+                $imagePath = ImageUploadService::storeImage($request->file('image_file'), 'categories');
             } catch (\Throwable $e) {
                 \Log::error('Update category image failed: '.$e->getMessage());
 

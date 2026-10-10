@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomBouquetOption;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,8 +38,10 @@ class CustomBouquetOptionController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $storedPath = $request->file('image')->store('custom-options', 'public');
-                $data['image'] = Storage::disk('public')->url($storedPath);
+                $storedPath = ImageUploadService::storeImage($request->file('image'), 'custom-options');
+                $data['image'] = (str_starts_with($storedPath, 'data:') || str_starts_with($storedPath, 'http'))
+                    ? $storedPath
+                    : Storage::disk('public')->url($storedPath);
             } catch (\Throwable $e) {
                 \Log::error('Upload custom bouquet option image failed: '.$e->getMessage());
 
@@ -78,8 +81,10 @@ class CustomBouquetOptionController extends Controller
 
         if ($request->hasFile('image')) {
             try {
-                $storedPath = $request->file('image')->store('custom-options', 'public');
-                $data['image'] = Storage::disk('public')->url($storedPath);
+                $storedPath = ImageUploadService::storeImage($request->file('image'), 'custom-options');
+                $data['image'] = (str_starts_with($storedPath, 'data:') || str_starts_with($storedPath, 'http'))
+                    ? $storedPath
+                    : Storage::disk('public')->url($storedPath);
             } catch (\Throwable $e) {
                 \Log::error('Update custom bouquet option image failed: '.$e->getMessage());
 

@@ -9,12 +9,7 @@
   },
   "routes": [
     {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp))",
-      "dest": "/public/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
@@ -23,7 +18,7 @@
   ],
   "env": {
     "APP_ENV": "production",
-    "APP_DEBUG": "true",
+    "APP_DEBUG": "false",
     "APP_KEY": "base64:uBCFMHddNOUJHPQaPFjrnjRgod8VGPSIGVA2YpSuwwA=",
     "APP_URL": "https://desyflorist.vercel.app",
     "APP_CONFIG_CACHE": "/tmp/config.php",

@@ -41,23 +41,35 @@ class BannerController extends Controller
         $imagePath = $validated['image_url'] ?? null;
 
         if ($request->hasFile('image_file')) {
-            $imagePath = $request->file('image_file')->store('banners', 'public');
+            try {
+                $imagePath = $request->file('image_file')->store('banners', 'public');
+            } catch (\Throwable $e) {
+                \Log::error('Upload banner failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Gagal mengunggah foto banner: '.$e->getMessage()]);
+            }
         }
 
-        Banner::create([
-            'title' => $validated['title'] ?? null,
-            'subtitle' => $validated['subtitle'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'image_path' => $imagePath,
-            'link_url' => $validated['link_url'] ?? null,
-            'button_text' => $validated['button_text'] ?? null,
-            'secondary_button_text' => $validated['secondary_button_text'] ?? null,
-            'secondary_button_url' => $validated['secondary_button_url'] ?? null,
-            'badge_text' => $validated['badge_text'] ?? null,
-            'badge_author' => $validated['badge_author'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
-            'status' => $validated['status'],
-        ]);
+        try {
+            Banner::create([
+                'title' => $validated['title'] ?? null,
+                'subtitle' => $validated['subtitle'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'image_path' => $imagePath,
+                'link_url' => $validated['link_url'] ?? null,
+                'button_text' => $validated['button_text'] ?? null,
+                'secondary_button_text' => $validated['secondary_button_text'] ?? null,
+                'secondary_button_url' => $validated['secondary_button_url'] ?? null,
+                'badge_text' => $validated['badge_text'] ?? null,
+                'badge_author' => $validated['badge_author'] ?? null,
+                'sort_order' => $validated['sort_order'] ?? 0,
+                'status' => $validated['status'],
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Create banner failed: '.$e->getMessage());
+
+            return back()->withInput()->withErrors(['title' => 'Gagal menyimpan data banner ke database: '.$e->getMessage()]);
+        }
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner baru berhasil ditambahkan.');
     }
@@ -94,27 +106,43 @@ class BannerController extends Controller
         if ($request->hasFile('image_file')) {
             // Delete old local file if stored in public disk
             if (! empty($banner->image_path) && ! str_starts_with($banner->image_path, 'http://') && ! str_starts_with($banner->image_path, 'https://')) {
-                Storage::disk('public')->delete($banner->image_path);
+                try {
+                    Storage::disk('public')->delete($banner->image_path);
+                } catch (\Throwable $e) {
+                    // Ignore delete failure
+                }
             }
-            $imagePath = $request->file('image_file')->store('banners', 'public');
+            try {
+                $imagePath = $request->file('image_file')->store('banners', 'public');
+            } catch (\Throwable $e) {
+                \Log::error('Update banner image failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image_file' => 'Gagal mengunggah foto banner baru: '.$e->getMessage()]);
+            }
         } elseif (! empty($validated['image_url'])) {
             $imagePath = $validated['image_url'];
         }
 
-        $banner->update([
-            'title' => $validated['title'] ?? null,
-            'subtitle' => $validated['subtitle'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'image_path' => $imagePath,
-            'link_url' => $validated['link_url'] ?? null,
-            'button_text' => $validated['button_text'] ?? null,
-            'secondary_button_text' => $validated['secondary_button_text'] ?? null,
-            'secondary_button_url' => $validated['secondary_button_url'] ?? null,
-            'badge_text' => $validated['badge_text'] ?? null,
-            'badge_author' => $validated['badge_author'] ?? null,
-            'sort_order' => $validated['sort_order'] ?? 0,
-            'status' => $validated['status'],
-        ]);
+        try {
+            $banner->update([
+                'title' => $validated['title'] ?? null,
+                'subtitle' => $validated['subtitle'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'image_path' => $imagePath,
+                'link_url' => $validated['link_url'] ?? null,
+                'button_text' => $validated['button_text'] ?? null,
+                'secondary_button_text' => $validated['secondary_button_text'] ?? null,
+                'secondary_button_url' => $validated['secondary_button_url'] ?? null,
+                'badge_text' => $validated['badge_text'] ?? null,
+                'badge_author' => $validated['badge_author'] ?? null,
+                'sort_order' => $validated['sort_order'] ?? 0,
+                'status' => $validated['status'],
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Update banner failed: '.$e->getMessage());
+
+            return back()->withInput()->withErrors(['title' => 'Gagal memperbarui data banner: '.$e->getMessage()]);
+        }
 
         return redirect()->route('admin.banners.index')->with('success', 'Banner berhasil diperbarui.');
     }

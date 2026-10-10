@@ -36,10 +36,23 @@ class CustomBouquetOptionController extends Controller
         $data['status'] = $request->has('status');
 
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::disk('public')->url($request->file('image')->store('custom-options', 'public'));
+            try {
+                $storedPath = $request->file('image')->store('custom-options', 'public');
+                $data['image'] = Storage::disk('public')->url($storedPath);
+            } catch (\Throwable $e) {
+                \Log::error('Upload custom bouquet option image failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image' => 'Gagal mengunggah foto opsi: '.$e->getMessage()]);
+            }
         }
 
-        CustomBouquetOption::create($data);
+        try {
+            CustomBouquetOption::create($data);
+        } catch (\Throwable $e) {
+            \Log::error('Create custom bouquet option failed: '.$e->getMessage());
+
+            return back()->withInput()->withErrors(['name' => 'Gagal menyimpan data opsi: '.$e->getMessage()]);
+        }
 
         return redirect()->route('admin.custom-options.index')->with('success', 'Opsi buket berhasil ditambahkan.');
     }
@@ -64,10 +77,23 @@ class CustomBouquetOptionController extends Controller
         $data['status'] = $request->has('status');
 
         if ($request->hasFile('image')) {
-            $data['image'] = Storage::disk('public')->url($request->file('image')->store('custom-options', 'public'));
+            try {
+                $storedPath = $request->file('image')->store('custom-options', 'public');
+                $data['image'] = Storage::disk('public')->url($storedPath);
+            } catch (\Throwable $e) {
+                \Log::error('Update custom bouquet option image failed: '.$e->getMessage());
+
+                return back()->withInput()->withErrors(['image' => 'Gagal mengunggah foto opsi baru: '.$e->getMessage()]);
+            }
         }
 
-        $customOption->update($data);
+        try {
+            $customOption->update($data);
+        } catch (\Throwable $e) {
+            \Log::error('Update custom bouquet option failed: '.$e->getMessage());
+
+            return back()->withInput()->withErrors(['name' => 'Gagal memperbarui data opsi: '.$e->getMessage()]);
+        }
 
         return redirect()->route('admin.custom-options.index')->with('success', 'Opsi buket berhasil diperbarui.');
     }

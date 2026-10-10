@@ -6,16 +6,26 @@ $dirs = [
     '/tmp/sessions',
     '/tmp/cache',
     '/tmp/logs',
+    '/tmp/storage/app/public',
+    '/tmp/storage/app/public/banners',
+    '/tmp/storage/app/public/custom-options',
+    '/tmp/storage/app/public/payments',
+    '/tmp/storage/app/public/delivery-proofs',
+    '/tmp/storage/app/public/settings',
 ];
 
 foreach ($dirs as $dir) {
-    if (!is_dir($dir)) {
-        mkdir($dir, 0755, true);
+    if (! is_dir($dir)) {
+        @mkdir($dir, 0755, true);
     }
 }
 
+putenv('FILESYSTEM_PUBLIC_ROOT=/tmp/storage/app/public');
+$_ENV['FILESYSTEM_PUBLIC_ROOT'] = '/tmp/storage/app/public';
+$_SERVER['FILESYSTEM_PUBLIC_ROOT'] = '/tmp/storage/app/public';
+
 // Copy sqlite database to /tmp if needed
-$sourceDb = __DIR__ . '/../database/database.sqlite';
+$sourceDb = __DIR__.'/../database/database.sqlite';
 $targetDb = '/tmp/database.sqlite';
 
 if (file_exists($sourceDb)) {
@@ -27,4 +37,4 @@ if (file_exists($sourceDb)) {
 }
 
 // Forward to public/index.php
-require __DIR__ . '/../public/index.php';
+require __DIR__.'/../public/index.php';

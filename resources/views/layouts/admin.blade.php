@@ -12,7 +12,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#FAF8F5] text-[#2A2626] font-sans antialiased min-h-screen flex selection:bg-[#E5B2B6] selection:text-[#2A2626]">
+<body class="bg-[#FAF8F5] text-[#2A2626] font-sans antialiased min-h-screen flex flex-col lg:flex-row selection:bg-[#E5B2B6] selection:text-[#2A2626] overflow-x-hidden pb-16 lg:pb-0">
 
     <!-- Mobile Sidebar Backdrop -->
     <div id="adminMobileSidebarBackdrop" class="fixed inset-0 bg-[#2A2626]/50 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
@@ -292,25 +292,28 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div class="flex-1 flex flex-col min-w-0 w-full overflow-x-hidden">
         
         <!-- Header Topbar -->
-        <header class="bg-white border-b border-[#EADFD4] h-16 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-20">
-            <div class="flex items-center gap-3">
-                <button id="adminMobileMenuBtn" class="lg:hidden p-2 -ml-2 text-[#2A2626] hover:text-[#B85D66] rounded-lg focus:outline-none" aria-label="Buka Menu Admin">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        <header class="bg-white border-b border-[#EADFD4] h-16 flex items-center justify-between px-3.5 sm:px-6 sticky top-0 z-20 w-full shadow-2xs">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <button id="adminMobileMenuBtn" class="lg:hidden p-2 -ml-1 text-[#2A2626] hover:text-[#B85D66] hover:bg-[#FAF8F5] rounded-xl focus:outline-none transition flex-shrink-0" aria-label="Buka Menu Admin">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div class="flex flex-col">
-                    <span class="font-serif text-lg font-normal text-[#2A2626] lg:hidden">Desy Florist</span>
-                    <span class="text-xs text-[#9B9494] hidden sm:inline">Panel Administrasi Florist</span>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-serif text-lg sm:text-xl font-normal text-[#2A2626] truncate">Desy Florist</span>
+                    <span class="text-[9px] sm:text-xs text-[#9B9494] truncate">Studio Management</span>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 sm:gap-4 text-xs">
-                <a href="{{ route('home') }}" target="_blank" class="text-[#6B6565] hover:text-[#B85D66] hidden sm:inline-block">Lihat Toko Publik ↗</a>
-                <div class="flex items-center gap-2">
-                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover border border-[#D8BABF]">
-                    <span class="text-[#2A2626] font-semibold truncate max-w-[120px]">{{ Auth::user()->name }}</span>
+            <div class="flex items-center gap-2 sm:gap-4 text-xs flex-shrink-0">
+                <a href="{{ route('home') }}" target="_blank" class="text-[#6B6565] hover:text-[#B85D66] hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EADFD4] bg-[#FAF8F5] hover:border-[#B85D66] transition">
+                    <span>Lihat Toko Publik</span>
+                    <span>↗</span>
+                </a>
+                <div class="flex items-center gap-1.5 sm:gap-2 bg-[#FAF8F5] sm:bg-transparent py-1 px-2 sm:p-0 rounded-full sm:rounded-none border border-[#EADFD4] sm:border-0">
+                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover border border-[#D8BABF] flex-shrink-0">
+                    <span class="text-[#2A2626] font-semibold truncate max-w-[75px] sm:max-w-[130px]">{{ Auth::user()->name }}</span>
                 </div>
             </div>
         </header>
@@ -335,15 +338,51 @@
             </div>
         @endif
 
-        <main class="p-4 sm:p-6 md:p-8 flex-grow">
+        <main class="p-3.5 sm:p-6 md:p-8 flex-grow w-full max-w-full overflow-x-hidden">
             @yield('content')
         </main>
     </div>
+
+    <!-- Mobile Sticky Bottom Navigation Bar for Admin -->
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#EADFD4] z-30 flex items-center justify-around h-14 px-1 shadow-lg">
+        <a href="{{ route('admin.dashboard') }}"
+           class="flex flex-col items-center justify-center flex-1 py-1 text-[10px] {{ request()->routeIs('admin.dashboard') ? 'text-[#B85D66] font-bold' : 'text-[#6B6565]' }}">
+            <span class="text-base leading-none">📊</span>
+            <span class="mt-0.5">Beranda</span>
+        </a>
+        <a href="{{ route('admin.orders.index') }}"
+           class="flex flex-col items-center justify-center flex-1 py-1 text-[10px] relative {{ request()->routeIs('admin.orders*') ? 'text-[#B85D66] font-bold' : 'text-[#6B6565]' }}">
+            <span class="text-base leading-none">📦</span>
+            <span class="mt-0.5">Pesanan</span>
+            @php $pendingCount = \App\Models\Order::whereIn('status', ['pending', 'paid'])->count(); @endphp
+            @if($pendingCount > 0)
+                <span class="absolute top-0.5 right-3 min-w-4 h-4 px-1 bg-[#B85D66] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                    {{ $pendingCount }}
+                </span>
+            @endif
+        </a>
+        <a href="{{ route('admin.products.index') }}"
+           class="flex flex-col items-center justify-center flex-1 py-1 text-[10px] {{ request()->routeIs('admin.products*') ? 'text-[#B85D66] font-bold' : 'text-[#6B6565]' }}">
+            <span class="text-base leading-none">🌸</span>
+            <span class="mt-0.5">Produk</span>
+        </a>
+        <a href="{{ route('admin.custom-options.index') }}"
+           class="flex flex-col items-center justify-center flex-1 py-1 text-[10px] {{ request()->routeIs('admin.custom-options*') ? 'text-[#B85D66] font-bold' : 'text-[#6B6565]' }}">
+            <span class="text-base leading-none">💐</span>
+            <span class="mt-0.5">Kustom</span>
+        </a>
+        <button type="button" id="adminBottomMenuBtn"
+           class="flex flex-col items-center justify-center flex-1 py-1 text-[10px] text-[#6B6565] hover:text-[#B85D66] focus:outline-none">
+            <span class="text-base leading-none">☰</span>
+            <span class="mt-0.5">Menu</span>
+        </button>
+    </nav>
 
     <!-- Mobile Drawer Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const menuBtn = document.getElementById('adminMobileMenuBtn');
+            const bottomMenuBtn = document.getElementById('adminBottomMenuBtn');
             const closeBtn = document.getElementById('adminMobileCloseBtn');
             const sidebar = document.getElementById('adminMobileSidebar');
             const backdrop = document.getElementById('adminMobileSidebarBackdrop');
@@ -361,6 +400,7 @@
             }
 
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+            if (bottomMenuBtn) bottomMenuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (backdrop) backdrop.addEventListener('click', closeSidebar);
         });

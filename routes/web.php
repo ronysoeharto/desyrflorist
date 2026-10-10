@@ -226,8 +226,17 @@ Route::get('/build/{path}', function (string $path) {
 Route::get('/storage/{path}', function (string $path) {
     $filePath = storage_path('app/public/'.$path);
     if (! file_exists($filePath)) {
-        abort(404);
+        $tmpPath = '/tmp/storage/app/public/'.$path;
+        if (file_exists($tmpPath)) {
+            $filePath = $tmpPath;
+        } else {
+            abort(404);
+        }
     }
 
-    return response()->file($filePath);
+    $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
+
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+    ]);
 })->where('path', '.*');

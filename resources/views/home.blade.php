@@ -439,6 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </section>
 
 <!-- 6. Customer Testimonials -->
+@if(isset($reviews) && $reviews->isNotEmpty())
 <section class="py-16 md:py-20 bg-white border-t border-[#EADFD4]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-xl mx-auto mb-10">
@@ -447,69 +448,29 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @if(isset($reviews) && $reviews->isNotEmpty())
-                @foreach($reviews as $rev)
-                    <div class="p-6 rounded-xl border border-[#EADFD4] bg-[#FAF8F5] flex flex-col justify-between shadow-2xs">
-                        <div class="space-y-3">
-                            <div class="text-amber-400 text-sm tracking-wider font-bold">
-                                {{ str_repeat('★', $rev->rating) }}<span class="text-gray-300">{{ str_repeat('☆', 5 - $rev->rating) }}</span>
-                            </div>
-                            <p class="text-xs text-[#2A2626] leading-relaxed italic">
-                                "{{ $rev->comment ?? 'Rangkaian bunga segar dan sangat indah!' }}"
-                            </p>
+            @foreach($reviews as $rev)
+                <div class="p-6 rounded-xl border border-[#EADFD4] bg-[#FAF8F5] flex flex-col justify-between shadow-2xs">
+                    <div class="space-y-3">
+                        <div class="text-amber-400 text-sm tracking-wider font-bold">
+                            {{ str_repeat('★', $rev->rating) }}<span class="text-gray-300">{{ str_repeat('☆', 5 - $rev->rating) }}</span>
                         </div>
-                        <div class="pt-4 border-t border-[#EADFD4] mt-4 flex items-center justify-between text-[11px]">
-                            <div>
-                                <span class="font-semibold text-[#2A2626] block">{{ $rev->user->name ?? 'Pelanggan Desy Florist' }}</span>
-                                @if($rev->product)
-                                    <span class="text-[10px] text-[#B85D66] font-medium block">{{ $rev->product->name }}</span>
-                                @endif
-                            </div>
-                            <span class="text-[#9B9494] text-[10px]">{{ $rev->created_at->diffForHumans() }}</span>
+                        <p class="text-xs text-[#2A2626] leading-relaxed italic">
+                            "{{ $rev->comment ?? 'Rangkaian bunga segar dan sangat indah!' }}"
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-[#EADFD4] mt-4 flex items-center justify-between text-[11px]">
+                        <div>
+                            <span class="font-semibold text-[#2A2626] block">{{ $rev->user->name ?? 'Pelanggan Desy Florist' }}</span>
+                            @if($rev->product)
+                                <span class="text-[10px] text-[#B85D66] font-medium block">{{ $rev->product->name }}</span>
+                            @endif
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="p-6 rounded-xl border border-[#EADFD4] bg-[#FAF8F5] flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="text-amber-400 text-sm tracking-wider font-bold">★★★★★</div>
-                        <p class="text-xs text-[#2A2626] leading-relaxed italic">
-                            "Pesan buket mawar dusty pink untuk anniversary istri secara mendadak jam 1 siang, jam 4 sore sudah sampai dengan kondisi segar sekali. Istri saya sangat terharu!"
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t border-[#EADFD4] mt-4 flex items-center justify-between text-[11px]">
-                        <span class="font-semibold text-[#2A2626]">Rian Wicaksono</span>
-                        <span class="text-[#9B9494]">Surabaya Pusat</span>
+                        <span class="text-[#9B9494] text-[10px]">{{ $rev->created_at->diffForHumans() }}</span>
                     </div>
                 </div>
-
-                <div class="p-6 rounded-xl border border-[#EADFD4] bg-[#FAF8F5] flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="text-amber-400 text-sm tracking-wider font-bold">★★★★★</div>
-                        <p class="text-xs text-[#2A2626] leading-relaxed italic">
-                            "Custom bouquet-nya juara! Kita bisa pilih wrapping matte yang estetik dan pita satin tebal. Tidak terkesan murahan sama sekali, sangat mewah dan elegan."
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t border-[#EADFD4] mt-4 flex items-center justify-between text-[11px]">
-                        <span class="font-semibold text-[#2A2626]">Nadia Safitri</span>
-                        <span class="text-[#9B9494]">Surabaya Barat</span>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-xl border border-[#EADFD4] bg-[#FAF8F5] flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="text-amber-400 text-sm tracking-wider font-bold">★★★★★</div>
-                        <p class="text-xs text-[#2A2626] leading-relaxed italic">
-                            "Pesan standing flower untuk pembukaan toko baru. Pelayanannya komunikatif, ada kirim foto sebelum berangkat. Kurirnya juga sangat hati-hati."
-                        </p>
-                    </div>
-                    <div class="pt-4 border-t border-[#EADFD4] mt-4 flex items-center justify-between text-[11px]">
-                        <span class="font-semibold text-[#2A2626]">Bambang Hermawan</span>
-                        <span class="text-[#9B9494]">Surabaya Timur</span>
-                    </div>
-                </div>
-            @endif
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 @endsection

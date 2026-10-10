@@ -18,9 +18,11 @@ foreach ($dirs as $dir) {
 $sourceDb = __DIR__ . '/../database/database.sqlite';
 $targetDb = '/tmp/database.sqlite';
 
-if (file_exists($sourceDb) && !file_exists($targetDb)) {
-    copy($sourceDb, $targetDb);
-} elseif (!file_exists($targetDb)) {
+if (file_exists($sourceDb)) {
+    if (! file_exists($targetDb) || filemtime($sourceDb) > filemtime($targetDb)) {
+        copy($sourceDb, $targetDb);
+    }
+} elseif (! file_exists($targetDb)) {
     touch($targetDb);
 }
 
